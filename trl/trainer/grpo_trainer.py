@@ -401,7 +401,7 @@ class GRPOTrainer(Trainer):
                     "vllm.worker.worker.Worker._assert_memory_footprint_increased_during_profiling", return_value=None
                 )
                 with world_size_patch, profiling_patch:
-                    quantization_config = getattr(model_config, "quantization_config", None)
+                    quantization_config = getattr(model.config, "quantization_config", None)
                     if quantization_config is not None and quantization_config.get("quant_method") == "bitsandbytes":
                         self.llm = LLM(
                             model=model.name_or_path,
