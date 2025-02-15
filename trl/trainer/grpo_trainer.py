@@ -37,6 +37,7 @@ from transformers import (
     PreTrainedTokenizerBase,
     Trainer,
     TrainerCallback,
+    BitsAndBytesConfig,
     is_wandb_available,
 )
 from transformers.integrations.deepspeed import is_deepspeed_zero3_enabled
@@ -58,9 +59,6 @@ if is_vllm_available():
 
 if is_wandb_available():
     import wandb
-
-if is_bitsandbyte_available():
-    from transformers import BitsAndBytesConfig
 
 # What we call a reward function is a callable that takes a list of prompts and completions and returns a list of
 # rewards. When it's a string, it's a model ID, so it's loaded as a pretrained model.
@@ -405,7 +403,7 @@ class GRPOTrainer(Trainer):
                 )
                 with world_size_patch, profiling_patch:
                     quantization_config = getattr(model.config, "quantization_config", None)
-                    if quantization_config is not None and is_bitsandbyte_available() and isinstance(t,BitsAndBytesConfig):
+                    if quantization_config is not None and isinstance(t,BitsAndBytesConfig):
                         self.llm = LLM(
                             model=model.name_or_path,
                             device=vllm_device,
