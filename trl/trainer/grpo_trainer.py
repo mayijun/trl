@@ -403,7 +403,7 @@ class GRPOTrainer(Trainer):
                 )
                 with world_size_patch, profiling_patch:
                     quantization_config = getattr(model.config, "quantization_config", None)
-                    if quantization_config is not None and isinstance(t,BitsAndBytesConfig):
+                    if quantization_config is not None and isinstance(quantization_config,BitsAndBytesConfig):
                         self.llm = LLM(
                             model=model.name_or_path,
                             device=vllm_device,
